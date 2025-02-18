@@ -3,7 +3,6 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const multer = require('multer');
-const AWS = require('aws-sdk');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
@@ -22,11 +21,7 @@ const pool = new Pool({
 app.use(cors());
 app.use(express.json());
 
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: 'us-west-1', // Set your desired AWS region
-});
+
    
 app.get ('/', (req, res) => {
      res.send('Hello from the server!')
@@ -66,7 +61,7 @@ const upload = multer({ dest: 'uploads/' });
 app.post('/upload', upload.single('file'), (req, res) => {
   const file = req.file;
   const params = {
-    Bucket: 'your-s3-bucket-name', // Specify your AWS S3 bucket name
+    Bucket: 'your-s3-bucket-name', 
     Key: file.filename,
     Body: fs.createReadStream(file.path),
     ContentType: file.mimetype,
